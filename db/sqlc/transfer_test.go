@@ -25,7 +25,7 @@ func createRandomTransfer(t *testing.T, account1, account2 Account) Transfer {
 	require.Equal(t, arg.Amount, transfer.Amount)
 
 	require.NotZero(t, transfer.ID)
-	require.NotZero(t, transfer.CreatedAt.Time)
+	require.NotZero(t, transfer.CreatedAt)
 
 	return transfer
 }
