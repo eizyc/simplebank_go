@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var testStore Store
+var testStore *SQLStore
 var testQueries *Queries
 
 const (
