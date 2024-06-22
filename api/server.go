@@ -3,6 +3,8 @@ package api
 import (
 	db "github.com/eizyc/simplebank/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 )
 
 // Server serves HTTP requests for our banking service.
@@ -15,6 +17,13 @@ func NewServer(store db.Store) (*Server, error) {
 
 	server := &Server{
 		store: store,
+	}
+
+	// Attempt to retrieve the underlying validation engine of Gin from the binding package
+	// If the type assertion is successful, it means the engine is a *validator.Validate instance
+	// and we can register our own validation functions.
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("currency", validCurrency)
 	}
 
 	server.setupRouter()
