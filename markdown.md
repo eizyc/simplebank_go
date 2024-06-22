@@ -14,3 +14,9 @@ make createdb
 ``` shell
 migrate -path db/migration/ -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 ```
+
+
+#### How to make a new version database migration aka. the database need to change some schema
+```
+make new_migration
+```
