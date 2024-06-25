@@ -74,3 +74,13 @@ brew install protobuf
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
 ```
+##### gRPC clients
+[gRPC clients evans](https://github.com/ktr0731/evans)
+```
+brew tap ktr0731/evans
+brew install evans
+```
+Request
+```
+evans --host localhost --port 9090 -r repl
+```
