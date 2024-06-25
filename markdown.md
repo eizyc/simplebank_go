@@ -47,3 +47,9 @@ By Legacy versions, besides the depends_on field, we need some script like [wait
 ```
 chomd +x fileName
 ```
+
+
+#### Create a new db migration
+```
+make new_migration name=<migration_name>
+```
