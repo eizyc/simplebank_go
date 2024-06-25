@@ -53,3 +53,15 @@ chomd +x fileName
 ```
 make new_migration name=<migration_name>
 ```
+
+#### Create dbdocs and db_schema
+##### dbdocs need
+```
+npm i dbdocs -g
+```
+and `make db_docs` 
+##### db_schema need
+```
+npm install -g @dbml/cli
+```
+and `make db_schema` 
