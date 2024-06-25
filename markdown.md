@@ -33,5 +33,17 @@ docker network create bank-network
 \\ connect network to postgresql container
 docker network connect bank-network postgres16
 \\ container 
-docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres16:5432/simple_bank?sslmode=disable" simplebank:last 
+docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable" simplebank:last 
+```
+
+#### How to run docker-compose
+```
+docker compose up
+```
+
+#### Modiy file permissions for start.sh wait-for.sh for Control startup and shutdown order in Compose
+To make the api container run after by the postgres container, we have to use [`depends_on`](https://docs.docker.com/compose/startup-order/) and with `condition: service_healthy`
+By Legacy versions, besides the depends_on field, we need some script like [wait-for](https://github.com/mrako/wait-for), new version docker compose supported inside. Anyway, If we want to use some scipts, don't miss change scipts permissions.
+```
+chomd +x fileName
 ```
