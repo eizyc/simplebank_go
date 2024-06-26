@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -17,6 +19,9 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 )
+
+//go:embed doc/swagger/*
+var staticFiles embed.FS
 
 func main() {
 	config, err := util.LoadConfig(".")
@@ -85,7 +90,11 @@ func runGatewayServer(config util.Config, store db.Store) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	fs := http.FileServer(http.Dir("./doc/swagger"))
+	staticFS, err := fs.Sub(staticFiles, "doc/swagger")
+	if err != nil {
+		log.Fatal("cannot get swagger", err)
+	}
+	fs := http.FileServer(http.FS(staticFS))
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
