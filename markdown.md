@@ -89,3 +89,7 @@ evans --host localhost --port 9090 -r repl
 [gRPC-Gateway (We use protoc)](https://github.com/grpc-ecosystem/grpc-gateway)
 
 [Using proto names in JSON](https://grpc-ecosystem.github.io/grpc-gateway/docs/mapping/customizing_your_gateway/)
+
+
+#### SQLC
+[nullability of SQLC parameters](https://docs.sqlc.dev/en/stable/howto/named_parameters.html)
