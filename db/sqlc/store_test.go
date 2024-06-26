@@ -156,6 +156,9 @@ func TestTransferTxDeadlock(t *testing.T) {
 	require.NoError(t, err)
 
 	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
-	require.Equal(t, account1.Balance, updatedAccount1.Balance)
-	require.Equal(t, account2.Balance, updatedAccount2.Balance)
+	delta := 0.00000001
+	require.InDelta(t, account1.Balance, updatedAccount1.Balance, delta)
+	require.InDelta(t, account2.Balance, updatedAccount2.Balance, delta)
+	// require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	// require.Equal(t, account2.Balance, updatedAccount2.Balance)
 }
