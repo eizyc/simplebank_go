@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/spf13/viper"
@@ -22,6 +23,7 @@ type Config struct {
 	EmailSenderName      string        `mapstructure:"EMAIL_SENDER_NAME"`
 	EmailSenderAddress   string        `mapstructure:"EMAIL_SENDER_ADDRESS"`
 	EmailSenderPassword  string        `mapstructure:"EMAIL_SENDER_PASSWORD"`
+	EmailVerifyAddress   string        `mapstructure:"EMAIL_VERIFY_ADDRESS"`
 }
 
 // LoadConfig reads configuration from file or environment variables.
@@ -39,4 +41,18 @@ func LoadConfig(path string) (config Config, err error) {
 
 	err = viper.Unmarshal(&config)
 	return
+}
+
+// GetConfigValue is a generic function that retrieves a value from Viper
+// based on the provided key. It returns the value as an interface{} and an error.
+func GetConfigValue(key string) (interface{}, error) {
+	// Check if the key exists in the configuration
+	if !viper.IsSet(key) {
+		return nil, fmt.Errorf("config key '%s' not found", key)
+	}
+
+	// Get the value for the key
+	value := viper.Get(key)
+
+	return value, nil
 }
