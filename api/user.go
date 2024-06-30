@@ -9,7 +9,6 @@ import (
 	"github.com/eizyc/simplebank/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type createUserRequest struct {
@@ -59,14 +58,11 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pgconn.PgError); ok {
-			errCode := string(pqErr.Code)
-			switch errCode {
-			// UniqueViolation 23505
-			case "23505":
-				ctx.JSON(http.StatusForbidden, errorResponse(err))
-				return
-			}
+		errCode := db.ErrorCode(err)
+		switch errCode {
+		case db.UniqueViolation:
+			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			return
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

@@ -10,7 +10,6 @@ import (
 	"github.com/eizyc/simplebank/val"
 	"github.com/eizyc/simplebank/worker"
 	"github.com/hibiken/asynq"
-	"github.com/jackc/pgx/v5/pgconn"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -50,13 +49,10 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	txResult, err := server.store.CreateUserTx(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pgconn.PgError); ok {
-			errCode := string(pqErr.Code)
-			switch errCode {
-			// UniqueViolation 23505
-			case "23505":
-				return nil, status.Errorf(codes.AlreadyExists, "username already exists: %s", err)
-			}
+		errCode := db.ErrorCode(err)
+		switch errCode {
+		case db.UniqueViolation:
+			return nil, status.Errorf(codes.AlreadyExists, "username already exists: %s", err)
 		}
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)
 	}
