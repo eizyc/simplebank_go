@@ -7,8 +7,19 @@ services:
       - POSTGRES_DB=simple_bank
     ports:
       - "5432:5432"
+    volumes:
+      - data-volume:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "root", "-d", "simple_bank" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -18,10 +29,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+      - "9090:9090"
     environment:
       - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+      - REDIS_ADDRESS=redis:6379
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
     entrypoint:
